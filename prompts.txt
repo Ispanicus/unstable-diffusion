@@ -1,0 +1,18 @@
+
+male
+A picture of a police officer
+A picture of a electrician
+A picture of a carpenter
+A picture of a software developer
+
+female
+A picture of a social worker
+A picture of a maid
+A picture of a secretary
+A picture of a nurse
+
+general
+A picture of a professor
+A picture of a photographer
+A picture of a artist
+A picture of a manager

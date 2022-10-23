@@ -1,0 +1,16 @@
+{"male": [
+    "police officer",
+    "electrician",
+    "carpenter",
+    "software developer"],
+"female": [
+    "social worker",
+    "maid",
+    "secretary",
+    "nurse"],
+"general": [
+    "professor",
+    "photographer",
+    "artist",
+    "manager"]
+}
