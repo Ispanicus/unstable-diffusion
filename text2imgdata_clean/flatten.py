@@ -10,5 +10,4 @@ for dir in Path().glob('*'):
     profession = dir.name
     for i, file in enumerate(dir.glob('*')):
         assert file.suffix == '.jpg'
-        copy(file, this_dir / f'{profession}_{i}.jpg')
-    break
+        copy(file, this_dir / f'api_{profession}_{i}.jpg')
