@@ -1,9 +1,12 @@
 import json
 
-gender_profs = json.load(open('occupations.txt'))
+PREFIX = 'A picture of a '
 
-with open('prompts.txt', 'w') as f:
-    for gender, profs in gender_profs.items():
-        print(f'\n{gender}', file=f)
-        for prof in profs:
-            print(f'A picture of a {prof}', file=f)
+if __name__ == '__main__':
+    gender_profs = json.load(open('occupations.txt'))
+
+    with open('prompts.txt', 'w') as f:
+        for gender, profs in gender_profs.items():
+            print(f'\n{gender}', file=f)
+            for prof in profs:
+                print(PREFIX + str(prof), file=f)
