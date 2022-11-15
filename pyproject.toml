@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools==63.4.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unstable"
+version = "0.0.1"
+dependencies = [
+    'statsmodels',
+]
+
+
+
+[tool.setuptools]
+packages = ["unstable"]
