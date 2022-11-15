@@ -1,7 +1,6 @@
-import pandas as pd
 from statsmodels.stats.inter_rater import fleiss_kappa, aggregate_raters
 import numpy as np
-from unstable.meta_tools import get_path
+
 from unstable.annotations.load_anno_df import get_annotation_df
 
 df = get_annotation_df()
