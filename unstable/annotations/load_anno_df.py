@@ -11,6 +11,11 @@ def load(name):
         return json.load(f)
 
 def get_annotation_df():
+    """Returns all annotation data in pandas dataframe
+
+    Returns:
+        df: columns=["filename","api","profession","annotator","annotation"]
+    """
     data_list =[]
     skips = 0
     names = ["johan","chris","karl","alan"]
