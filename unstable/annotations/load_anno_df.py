@@ -44,4 +44,22 @@ def get_annotation_df():
 
 if __name__ == '__main__':
     df = get_annotation_df()
+    counts_per_file = (
+        df.groupby(['filename', 'annotation'])
+        .count()
+        .iloc[:, 0]
+        .rename('count')
+        .unstack('annotation', fill_value=0)
+    )
+    counts_per_file
+
+    counts = (
+        df.groupby(['api', 'profession', 'annotation'])
+        .count()
+        .iloc[:, 0]
+        .rename('count')
+        .unstack('annotation', fill_value=0)
+    )
+    counts
+
     print(df.sample(3))
