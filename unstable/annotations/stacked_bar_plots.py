@@ -1,8 +1,8 @@
 import pandas as pd
 from unstable.annotations.load_anno_df import get_annotation_df
 import holoviews as hv
+from unstable.meta_tools import percent_tick
 import hvplot.pandas
-from bokeh.models import NumeralTickFormatter
 hv.extension('bokeh')
 
 df = get_annotation_df()
@@ -27,8 +27,6 @@ normalized = (
 is_api = pd.IndexSlice[:, True, :]
 not_api = pd.IndexSlice[:, False, :]
 
-yticks = NumeralTickFormatter(format='0 %')
-
 plots = []
 for mask, title in zip([is_api, not_api], ['stable-diff', 'laion']):
     data = normalized.loc[mask]
@@ -36,7 +34,7 @@ for mask, title in zip([is_api, not_api], ['stable-diff', 'laion']):
     female_background = (male / male).rename('female')
     plots.append(
         (
-            female_background.hvplot.bar(stacked=True).opts(xrotation=30, yformatter=yticks, show_grid=True, color='orange')
+            female_background.hvplot.bar(stacked=True).opts(xrotation=30, yformatter=percent_tick, show_grid=True, color='orange')
             * male.hvplot.bar(stacked=True)
             * unstacked.Pass.rename('Skip %').loc[mask].hvplot.scatter(c='black')
             * hv.HLine(.5).opts(color='gray')
