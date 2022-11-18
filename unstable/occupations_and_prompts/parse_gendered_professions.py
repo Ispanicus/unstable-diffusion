@@ -55,14 +55,15 @@ def preprocessed():
 
 
 
-df = preprocessed()
-level_0 = df[df.Occupation.str.startswith('{0}')]
-level_1 = df[df.Occupation.str.startswith('{1}')]
-level_2 = df[df.Occupation.str.startswith('{2}')]
-level_3 = df[df.Occupation.str.startswith('{3}')]
+if __name__ == '__main__':
+    df = preprocessed()
+    level_0 = df[df.Occupation.str.startswith('{0}')]
+    level_1 = df[df.Occupation.str.startswith('{1}')]
+    level_2 = df[df.Occupation.str.startswith('{2}')]
+    level_3 = df[df.Occupation.str.startswith('{3}')]
 
-raw_occupations = df.Occupation.str.lstrip('01234').to_list()
-with open('raw_occupations.txt', 'w') as f:
-    f.write('\n'.join(map(str, raw_occupations)))
+    raw_occupations = df.Occupation.str.lstrip('01234').to_list()
+    with open('raw_occupations.txt', 'w') as f:
+        f.write('\n'.join(map(str, raw_occupations)))
 
-df.query('(Women < 0.2)')
+    df.query('(Women < 0.2)')
