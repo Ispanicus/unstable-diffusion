@@ -3,7 +3,7 @@ import json
 PREFIX = 'A picture of a '
 
 if __name__ == '__main__':
-    gender_profs = json.load(open('occupations.txt'))
+    gender_profs = json.load(open('occupations.json'))
 
     with open('prompts.txt', 'w') as f:
         for gender, profs in gender_profs.items():

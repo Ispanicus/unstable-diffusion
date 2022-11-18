@@ -4,6 +4,7 @@ import requests
 import re
 import numpy as np
 from pathlib import Path
+from unstable.meta_tools import get_path
 
 # df = (
 #     pd.read_excel('cpsaat11.xlsx', skiprows=5)
@@ -14,7 +15,7 @@ from pathlib import Path
 # )
 # df['Men'] = 100-df['Women']
 def query():
-    cache = 'gender_prof.parquet'
+    cache = get_path('data/gender_prof.parquet')
 
     if not Path(cache).exists():
         URL = 'https://www.bls.gov/cps/cpsaat11.htm'
@@ -57,13 +58,9 @@ def preprocessed():
 
 if __name__ == '__main__':
     df = preprocessed()
-    level_0 = df[df.Occupation.str.startswith('{0}')]
-    level_1 = df[df.Occupation.str.startswith('{1}')]
-    level_2 = df[df.Occupation.str.startswith('{2}')]
-    level_3 = df[df.Occupation.str.startswith('{3}')]
 
-    raw_occupations = df.Occupation.str.lstrip('01234').to_list()
-    with open('raw_occupations.txt', 'w') as f:
-        f.write('\n'.join(map(str, raw_occupations)))
+    # raw_occupations = df.Occupation.str.lstrip('01234').to_list()
+    # with open(get_path('data/raw_occupations.txt'), 'w') as f:
+    #     f.write('\n'.join(map(str, raw_occupations)))
 
     df.query('(Women < 0.2)')
