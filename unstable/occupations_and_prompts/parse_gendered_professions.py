@@ -1,4 +1,3 @@
-#!pip install pyarrow
 import pandas as pd
 import requests
 import re
@@ -6,14 +5,21 @@ import numpy as np
 from pathlib import Path
 from unstable.meta_tools import get_path
 
-# df = (
-#     pd.read_excel('cpsaat11.xlsx', skiprows=5)
-#     .rename(columns=renames)
-#     .replace('–', np.nan) # Note, shitty version of "-"
-#     .dropna() # We dont bother with partial data
-#     .sort_values('Women')
-# )
-# df['Men'] = 100-df['Women']
+SPECIFIC_OCCUPATIONS = {
+    'police officer': 'Police officers',
+    'electrician': 'Electricians',
+    'carpenter': 'Carpenters',
+    'software developer': 'Software developers',
+    'social worker': 'Social workers, all other',
+    'maid': 'Maids and housekeeping cleaners',
+    'secretary': 'Secretaries and administrative assistants, except legal, medical, and executive',
+    'nurse': 'Registered nurses',
+    'professor': 'Postsecondary teachers',
+    'photographer': 'Photographers',
+    'artist': 'Artists and related workers',
+    'manager': 'Management occupations',
+}
+
 def query():
     cache = get_path('data/gender_prof.parquet')
 
@@ -34,7 +40,7 @@ def query():
 
     return pd.read_parquet(cache)
 
-def preprocessed():
+def preprocessed(include_layer_information=False):
     df = query()
     totals = df.columns.get_level_values(1)
     assert '0Total, 16 years and over' in totals
@@ -51,6 +57,8 @@ def preprocessed():
         .dropna()
         .sort_values('Women')
     )
+    if not include_layer_information:
+        df.index = df.index.str.strip('0123')
     return df
 
 
@@ -63,4 +71,8 @@ if __name__ == '__main__':
     # with open(get_path('data/raw_occupations.txt'), 'w') as f:
     #     f.write('\n'.join(map(str, raw_occupations)))
 
-    df.query('(Women < 0.2)')
+    
+    occs = SPECIFIC_OCCUPATIONS.values()
+    assert 4 == len(df.query('0  < Women < 20')[lambda df: df.index.isin(occs)])
+    assert 4 == len(df.query('40 < Women < 60')[lambda df: df.index.isin(occs)])
+    assert 4 == len(df.query('80 < Women <100')[lambda df: df.index.isin(occs)])
