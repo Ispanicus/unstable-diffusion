@@ -42,24 +42,35 @@ def get_annotation_df():
 
     return pd.DataFrame(data_list,columns=["filename","api","profession","annotator","annotation"])
 
-if __name__ == '__main__':
+def expand_filename(df):
+    split = (
+        df.filename
+        .str.split(
+            r"(api_)?(.*)_\d+.jpg", regex=True, expand=True
+        )[[1, 2]]
+        .rename(columns={1: 'api', 2: 'profession'})
+        .astype({'api': bool})
+    )
+    return pd.concat([df, split], axis=1)
+
+def get_majority_annotation_df():
     df = get_annotation_df()
-    counts_per_file = (
+    majority_df = (
         df.groupby(['filename', 'annotation'])
         .count()
         .iloc[:, 0]
         .rename('count')
-        .unstack('annotation', fill_value=0)
+        [lambda x: x >= 3]
+        .reset_index()
+        .pipe(expand_filename)
     )
-    counts_per_file
+    formatted_df = majority_df.set_index('filename')[['profession', 'api', 'annotation']]
+    return formatted_df
 
-    counts = (
-        df.groupby(['api', 'profession', 'annotation'])
-        .count()
-        .iloc[:, 0]
-        .rename('count')
-        .unstack('annotation', fill_value=0)
-    )
-    counts
+
+if __name__ == '__main__':
+    df = get_annotation_df()
+    majority_df = get_majority_annotation_df()
 
     print(df.sample(3))
+    print(majority_df.sample(3))
