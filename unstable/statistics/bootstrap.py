@@ -2,6 +2,7 @@ import pandas as pd
 from functools import lru_cache
 from typing import List
 import hvplot.pandas
+from unstable.occupations_and_prompts.prompter import get_gender_occupations
 from unstable.annotations.load_anno_df import get_majority_annotation_df
 from unstable.occupations_and_prompts.parse_gendered_professions import preprocessed
 
@@ -46,6 +47,37 @@ def conf_intervals():
     conf = bootstraps.quantile([.025, .975], axis=1)
     return conf
 
+def get_gender_bootstrapped():
+    gender_occ = get_gender_occupations()
+    occ_to_gender = {
+        prof: gender 
+        for gender, prof_list in gender_occ.items() 
+        for prof in prof_list
+    }
+
+    prof_bootstrap = bootstrap().reset_index()
+    prof_bootstrap['gender'] = (
+        prof_bootstrap.profession.str.replace('_', ' ')
+        .map(occ_to_gender)
+    )
+
+    new_index = ['gender', 'api']
+    gender_bootstrap = (
+        prof_bootstrap
+        .drop(columns='profession')
+        .set_index(new_index)
+        .groupby(new_index)
+        .apply(
+            lambda group: 
+            pd.Series(
+                group.to_numpy().flatten(), 
+                name=group.name
+            )
+        )
+    )
+    return gender_bootstrap
+
+
 if __name__ == '__main__':
     conf = conf_intervals()
     conf
@@ -53,5 +85,8 @@ if __name__ == '__main__':
     hi = conf.loc[0.975]
     (lo < .5) & (.5 < hi)
 
-    df = preprocessed()
-    df
+    #df = preprocessed()
+
+    import holoviews as hv
+    gender_bootstrap = get_gender_bootstrapped()
+    gender_bootstrap.stack().hvplot.box(by=['gender', 'api']).opts(show_legend=False)*hv.HLine(.5).opts(color='black', line_dash='dotted', show_legend=False)
