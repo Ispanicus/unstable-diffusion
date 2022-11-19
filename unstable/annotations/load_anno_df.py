@@ -10,7 +10,7 @@ def load(name):
     with open(path, "r") as f:
         return json.load(f)
 
-def get_annotation_df():
+def get_annotation_df(dropna=True):
     """Returns all annotation data in pandas dataframe
 
     Returns:
@@ -39,8 +39,14 @@ def get_annotation_df():
                             profession,
                             name,
                             annotation["annotations"][0]["result"][0]["value"]["choices"][0]])
-
-    return pd.DataFrame(data_list,columns=["filename","api","profession","annotator","annotation"])
+    df = pd.DataFrame(data_list,columns=["filename","api","profession","annotator","annotation"])
+    if dropna:
+        df = df.pivot(
+            columns='annotator',
+            index=['filename', 'api','profession'],
+            values='annotation'
+        ).dropna().stack().rename('annotation').reset_index()
+    return df
 
 def expand_filename(df):
     split = (
@@ -53,19 +59,26 @@ def expand_filename(df):
     )
     return pd.concat([df, split], axis=1)
 
-def get_majority_annotation_df():
+def get_majority_annotation_df(drop_ties=True):
     df = get_annotation_df()
-    majority_df = (
-        df.groupby(['filename', 'annotation'])
-        .count()
-        .iloc[:, 0]
-        .rename('count')
-        [lambda x: x >= 3]
-        .reset_index()
-        .pipe(expand_filename)
+    counts = (
+        df.pivot(columns='annotator',
+                 index='filename',
+                 values='annotation')
+        .stack()
+        .groupby(['filename'])
+        .value_counts()
+        .rename_axis(index={None: 'annotation'})
     )
-    formatted_df = majority_df.set_index('filename')[['profession', 'api', 'annotation']]
-    return formatted_df
+    if drop_ties:
+        tie_filenames = (
+            counts.groupby('filename')
+            .filter(lambda x: (x==2).all())
+            .index
+        )
+        counts = counts[~counts.index.isin(tie_filenames)]
+    majority = counts.groupby(['filename']).idxmax()
+    return counts[majority].rename('n_agree')
 
 def merge_multiindex(df):
     '''
