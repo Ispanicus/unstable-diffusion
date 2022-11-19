@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 import re
-
+from unstable.occupations_and_prompts.prompter import get_gender_occupations
 from unstable.meta_tools import get_path
 
 def load(name):
@@ -66,6 +66,44 @@ def get_majority_annotation_df():
     )
     formatted_df = majority_df.set_index('filename')[['profession', 'api', 'annotation']]
     return formatted_df
+
+def merge_multiindex(df):
+    '''
+    Index transformation.
+    Turns ('nurse', True) -> "nurse SD" 
+    '''
+    return df.set_index(
+        df.index
+        .to_frame()
+        .astype(str)
+        .apply(' '.join, axis=1)
+        .str.replace('True', 'SD')
+        .str.replace('False', 'CR')
+        .rename('profession_source')
+    )
+
+def profession_index_to_gender_index(df):
+    ''' 
+    Index transformation
+    Turns 'nurse' -> 'female'
+    '''
+    gender_occ = get_gender_occupations()
+    occ_to_gender = {
+        prof: gender 
+        for gender, prof_list in gender_occ.items() 
+        for prof in prof_list
+    }
+
+    index_w_o_prof = [c for c in df.index.names if c != 'profession']
+    profession = df.index.get_level_values('profession')
+    with_gender_index = (
+        df.reset_index()
+        .assign(
+            gender=profession.str.replace('_', ' ').map(occ_to_gender)
+        ).drop(columns='profession')
+        .set_index(index_w_o_prof + ['gender'])
+    )
+    return with_gender_index
 
 
 if __name__ == '__main__':

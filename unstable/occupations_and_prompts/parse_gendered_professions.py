@@ -61,6 +61,18 @@ def preprocessed(include_layer_information=False):
         df.index = df.index.str.strip('0123')
     return df
 
+def get_female_work_percent():
+    occupation_df = preprocessed()
+    occupation_df.index = occupation_df.index.map(
+        {full: prompt for prompt, full in SPECIFIC_OCCUPATIONS.items()}
+    )
+    female_work_percent = (
+        occupation_df[occupation_df.index.notnull()]
+        .rename_axis(index={'Occupation': 'profession'})
+        .Women
+        .rename('us_female_percent') / 100
+    )
+    return female_work_percent
 
 
 
