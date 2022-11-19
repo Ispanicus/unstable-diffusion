@@ -40,11 +40,7 @@ annotation_ratios_per_prof = (
 )
 print(annotation_ratios_per_prof.head(6))
 
-agreement_df = df.groupby(['filename','annotation']).count().unstack()['api'].stack()
+annotation_df = df.groupby(['filename','annotation']).count().unstack()['api'].stack()[lambda x: x >= 2].reset_index('annotation', drop=True).reset_index().drop_duplicates()
 
-value_set = set()
-for x in agreement_df.items():
-    if x[1] >= 2.0:
-        value_set.add((x[0][0],x[1]))
-        
-print(f'Credibility: {sum(x[1] for x in value_set)/len(value_set)/4}')
+print(f'Credibility: {annotation_df[0].sum()/(len(annotation_df))/4}')
+
