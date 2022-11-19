@@ -40,10 +40,10 @@ annotation_ratios_per_prof = (
 )
 print(annotation_ratios_per_prof.head(6))
 
-agreement = df.groupby(['filename','annotation']).count().unstack()['api'].stack()
+agreement_df = df.groupby(['filename','annotation']).count().unstack()['api'].stack()
 
 value_set = set()
-for x in agreement.items():
+for x in agreement_df.items():
     if x[1] >= 2.0:
         value_set.add((x[0][0],x[1]))
         
