@@ -5,7 +5,7 @@ from unstable.occupations_and_prompts.prompter import get_gender_occupations
 from unstable.meta_tools import get_path
 
 def load(name):
-    path = get_path(f"/data/annotations/{name}.json")
+    path = get_path(f"data/annotations/{name}.json")
 
     with open(path, "r") as f:
         return json.load(f)
