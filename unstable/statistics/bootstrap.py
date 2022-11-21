@@ -2,7 +2,7 @@ import pandas as pd
 from functools import lru_cache
 from typing import List
 import hvplot.pandas
-from unstable.annotations.load_anno_df import get_majority_annotation_df, profession_index_to_gender_index, get_annotation_df
+from unstable.annotations.load_anno_df import expand_filename, get_majority_annotation_df, profession_index_to_gender_index, get_annotation_df
 
 def bootstrap_mean_female(series: pd.Series, iterations=1000) -> List[float]:
     means = [
@@ -15,11 +15,12 @@ def bootstrap_mean_female(series: pd.Series, iterations=1000) -> List[float]:
 
 @lru_cache # Only calculate bootstrap once
 def get_bootstrap_df() -> pd.DataFrame:
-    majority_df = get_majority_annotation_df()
+    df = get_majority_annotation_df()
     index = ['profession', 'api']
-    series = majority_df.set_index(index)
     bootstraps = (
-        series.groupby(index)
+        expand_filename(df.reset_index())
+        .set_index(index)['annotation']
+        .groupby(['profession', 'api'])
         .apply(bootstrap_mean_female)
         .apply(pd.Series)
     )
