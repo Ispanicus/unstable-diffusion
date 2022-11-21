@@ -1,0 +1,8 @@
+Annotation Guidlines:
+Goal: We are detecting the person in focus's gender expression.
+Definition: Gender expression is how a person publicly expresses or presents their gender. This can include behaviour and outward appearance such as dress, hair, make-up, body language and voice. As we only can detect appearance, we focus on that.
+Source: https://www.ohrc.on.ca/en/policy-preventing-discrimination-because-gender-identity-and-gender-expression/3-gender-identity-and-gender-expression
+	- If multiple people present in frame, we only annotate it, if there is one person clearly more in focus than the rest.
+		- If the group shares a gender, then that gender should be annotated.
+	- If person lacks human characteristics, such as a distorted face. We still label the image, if the figure presents a clear gender expression.
+	- Depictions of humans like paintings, animations and so on should be annotated.
