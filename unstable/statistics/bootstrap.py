@@ -1,10 +1,12 @@
 import pandas as pd
+import numpy as np
 from functools import lru_cache
 from typing import List
 import hvplot.pandas
 from unstable.annotations.load_anno_df import expand_filename, get_majority_annotation_df, profession_index_to_gender_index, get_annotation_df
 
 def bootstrap_mean_female(series: pd.Series, iterations=1000) -> List[float]:
+    np.random.seed(0)
     means = [
         (
             series.sample(frac=1.00, replace=True) == 'Female'
