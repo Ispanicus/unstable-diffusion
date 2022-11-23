@@ -18,12 +18,11 @@ def conf_interval_plot(bootstraps):
     conf['center'] = conf.mean(axis=1)
     conf['width'] = conf.center - conf['0.025']
 
-    ylabel = 'Female percentage'
     return (
         merge_multiindex(conf)
         .reset_index()
         .hvplot.errorbars('profession_source', 'center', 'width')
-        .opts(xrotation=30, ylabel=ylabel, yformatter=percent_tick)
+        .opts(ylabel='Female %')
     )
 
 def align_work_index(female_work_percentage):
@@ -43,8 +42,6 @@ def hypothesis_conf_plot():
         Labour stats points
         50% line
     '''
-
-if __name__ == '__main__':
     female_work_percent = get_female_work_percent()
 
     boots = [
@@ -65,10 +62,27 @@ if __name__ == '__main__':
     plots = []
     for boot, jitter in zip(boots, jitters):
         plots.append(
-            conf_interval_plot(boot)
+            hv.HLine(.5).opts(color='black', line_dash='dotted')
+            *conf_interval_plot(boot)
             *jitter
-            *hv.HLine(.5).opts(color='black', line_dash='dotted')
         )
-    plots[0].opts(xlabel='profession & source', title='Image label confidence intervals vs Labour data scatter')
-    plots[1].opts(xlabel='gender & source')
+    return plots
+
+
+if __name__ == '__main__':
+    plots = hypothesis_conf_plot()
+    plots[0].opts(
+        xlabel='profession & source',
+        title='Annotation confidence intervals \n& US labour data scatter',
+        invert_axes=True, width=400, height=400)
+    plots[1].opts(
+        xlabel='gender & source',
+        invert_axes=True,
+        width=400)
+    
+    def order_hook(plot, element):
+        x = plot.x_range.factors
+        print(x)
+        plot.x_range.factors = x
+
     hv.Layout(plots).cols(1).opts(shared_axes=False)
