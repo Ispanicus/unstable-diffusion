@@ -21,7 +21,7 @@ def conf_interval_plot(bootstraps):
     return (
         merge_multiindex(conf)
         .reset_index()
-        .hvplot.errorbars('profession_source', 'center', 'width')
+        .hvplot.errorbars('profession_source', 'center', 'width', legend=True)
         .opts(ylabel='Female %')
     )
 
@@ -48,23 +48,36 @@ def hypothesis_conf_plot():
         get_bootstrap_df(),
         get_gender_bootstrapped()
     ]
-    jitters = [
+    labours = [
         female_work_percent.pipe(
             align_work_index
-        ).hvplot.scatter(),
+        ),
 
         female_work_percent.pipe(
             profession_index_to_gender_index
         ).squeeze().pipe(
             align_work_index
-        ).hvplot.scatter().opts(jitter=.2),
+        )
     ]
+#.squeeze().sort_values().hvplot.scatter(),
     plots = []
-    for boot, jitter in zip(boots, jitters):
+    for boot, labour in zip(boots, labours):
+        cols = ['us_female_percent', 'color']
+        a = pd.DataFrame([[.35, 'white']], index=[''], columns=cols)
+        b = pd.DataFrame([[.65, 'white']], index=[' '], columns=cols)
+        scatter = (
+            pd.concat(
+                [labour.assign(color='#1f77b4'), a, b]
+            )
+            .rename_axis('source')
+            .reset_index()
+            .sort_values(['us_female_percent', 'source'])
+            .hvplot.scatter(x='source', y='us_female_percent', color='color')
+        )
         plots.append(
             hv.HLine(.5).opts(color='black', line_dash='dotted')
+            *scatter.relabel('US labour statistics')
             *conf_interval_plot(boot)
-            *jitter
         )
     return plots
 
@@ -74,15 +87,20 @@ if __name__ == '__main__':
     plots[0].opts(
         xlabel='profession & source',
         title='Annotation confidence intervals \n& US labour data scatter',
-        invert_axes=True, width=400, height=400)
-    plots[1].opts(
-        xlabel='gender & source',
-        invert_axes=True,
-        width=400)
+        invert_axes=True, width=400, height=400, legend_position='bottom')
+    # plots[1].opts(
+    #     xlabel='gender & source',
+    #     invert_axes=True,
+    #     width=400)
     
-    def order_hook(plot, element):
-        x = plot.x_range.factors
-        print(x)
-        plot.x_range.factors = x
+    legend = pd.Series([.50], index=['artist CR']).hvplot.scatter(
+        marker='dash', color='black'
+    ).relabel('95% interval')
 
-    hv.Layout(plots).cols(1).opts(shared_axes=False)
+    conf_plot = (plots[0]*legend).opts(
+        xlabel='profession & source',
+        title='Annotation confidence intervals \n& US labour data scatter',
+        xformatter=percent_tick,
+        invert_axes=True, width=400, height=500, legend_position='bottom'
+    )
+    conf_plot
