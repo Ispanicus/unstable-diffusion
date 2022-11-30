@@ -48,6 +48,20 @@ def get_annotation_df(dropna=True):
         ).dropna().stack().rename('annotation').reset_index()
     return df
 
+def get_krippendorff_df():
+    df = get_annotation_df()
+    vals = (
+        df.pivot(columns='annotator',
+                 index='filename',
+                 values='annotation'
+        )
+        .stack()
+        .map({'Male': 0, 'Female': 1, 'Pass': 2})
+        .unstack()
+        .values
+    )
+    return vals
+
 def expand_filename(df):
     split = (
         df.filename
