@@ -1,0 +1,170 @@
+absl-py==1.3.0
+aiohttp==3.8.3
+aiosignal==1.3.1
+albumentations==0.4.3
+altair==4.2.0
+antlr4-python3-runtime==4.8
+asttokens @ file:///home/conda/feedstock_root/build_artifacts/asttokens_1667325728359/work
+async-timeout==4.0.2
+attrs==22.1.0
+backcall @ file:///home/conda/feedstock_root/build_artifacts/backcall_1592338393461/work
+backports.functools-lru-cache @ file:///home/conda/feedstock_root/build_artifacts/backports.functools_lru_cache_1618230623929/work
+backports.zoneinfo==0.2.1
+black==22.10.0
+bleach==5.0.1
+blinker==1.5
+bokeh==2.4.3
+brotlipy==0.7.0
+cachetools==5.2.0
+certifi==2022.9.24
+cffi @ file:///C:/Windows/Temp/abs_6808y9x40v/croots/recipe/cffi_1659598653989/work
+charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+click==8.1.3
+-e git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e4823fc8e1#egg=clip
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
+colorcet==3.0.1
+coloredlogs==15.0.1
+commonmark==0.9.1
+cryptography @ file:///C:/b/abs_36x9ifdcl4/croot/cryptography_1665612655344/work
+debugpy @ file:///D:/bld/debugpy_1660619093354/work
+decorator @ file:///home/conda/feedstock_root/build_artifacts/decorator_1641555617451/work
+diffusers==0.7.2
+einops==0.3.0
+entrypoints @ file:///home/conda/feedstock_root/build_artifacts/entrypoints_1643888246732/work
+executing @ file:///home/conda/feedstock_root/build_artifacts/executing_1667317341051/work
+filelock==3.8.0
+flatbuffers==22.10.26
+frozenlist==1.3.3
+fsspec==2022.11.0
+ftfy==6.1.1
+future==0.18.2
+gitdb==4.0.9
+GitPython==3.1.29
+google-auth==2.14.1
+google-auth-oauthlib==0.4.6
+grpcio==1.50.0
+holoviews==1.15.2
+huggingface-hub==0.10.1
+humanfriendly==10.0
+hvplot==0.8.1
+idna @ file:///C:/b/abs_bdhbebrioa/croot/idna_1666125572046/work
+imageio==2.9.0
+imageio-ffmpeg==0.4.2
+imgaug==0.2.6
+importlib-metadata==5.0.0
+importlib-resources==5.10.0
+invisible-watermark==0.1.5
+ipykernel @ file:///D:/bld/ipykernel_1668027251175/work
+ipython @ file:///D:/bld/ipython_1667140819615/work
+jedi @ file:///home/conda/feedstock_root/build_artifacts/jedi_1659959867326/work
+Jinja2==3.1.2
+jsonschema==4.17.0
+jupyter_client @ file:///home/conda/feedstock_root/build_artifacts/jupyter_client_1668523008661/work
+jupyter_core @ file:///D:/bld/jupyter_core_1668030985185/work
+kornia==0.6.0
+-e git+https://github.com/CompVis/stable-diffusion.git@69ae4b35e0a0f6ee1af8bb9a5d0016ccb27e36dc#egg=latent_diffusion
+lxml==4.9.1
+Markdown==3.4.1
+MarkupSafe==2.1.1
+matplotlib-inline @ file:///home/conda/feedstock_root/build_artifacts/matplotlib-inline_1660814786464/work
+mkl-fft==1.3.1
+mkl-random @ file:///C:/ci/mkl_random_1626186184278/work
+mkl-service==2.4.0
+mpmath==1.2.1
+multidict==6.0.2
+mypy-extensions==0.4.3
+nest-asyncio @ file:///home/conda/feedstock_root/build_artifacts/nest-asyncio_1664684991461/work
+networkx==2.8.8
+numpy==1.23.4
+oauthlib==3.2.2
+omegaconf==2.1.1
+onnx==1.12.0
+onnxruntime==1.13.1
+opencv-python==4.1.2.30
+opencv-python-headless==4.6.0.66
+packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1637239678211/work
+pandas==1.5.1
+panel==0.14.1
+param==1.12.2
+parso @ file:///home/conda/feedstock_root/build_artifacts/parso_1638334955874/work
+pathspec==0.10.2
+patsy==0.5.3
+pickleshare @ file:///home/conda/feedstock_root/build_artifacts/pickleshare_1602536217715/work
+Pillow==9.2.0
+pkgutil_resolve_name==1.3.10
+platformdirs @ file:///home/conda/feedstock_root/build_artifacts/platformdirs_1657729053205/work
+prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1667565496306/work
+protobuf==3.20.1
+psutil @ file:///C:/Windows/Temp/abs_b2c2fd7f-9fd5-4756-95ea-8aed74d0039flsd9qufz/croots/recipe/psutil_1656431277748/work
+pudb==2019.2
+pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
+pyarrow==10.0.0
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pyct==0.4.8
+pydeck==0.8.0
+pyDeprecate==0.3.1
+Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1660666458521/work
+Pympler==1.0.1
+pyOpenSSL @ file:///opt/conda/conda-bld/pyopenssl_1643788558760/work
+pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1652235407899/work
+pyreadline3==3.4.1
+pyrsistent==0.19.2
+PySocks @ file:///C:/ci/pysocks_1605287845585/work
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytorch-lightning==1.4.2
+pytz==2022.6
+pytz-deprecation-shim==0.1.0.post0
+pyviz-comms==2.2.1
+PyWavelets==1.4.1
+pywin32==227
+PyYAML==6.0
+pyzmq @ file:///C:/ci/pyzmq_1657616005830/work
+regex==2022.10.31
+requests @ file:///C:/ci/requests_1657717096906/work
+requests-oauthlib==1.3.1
+rich==12.6.0
+rsa==4.9
+scikit-image==0.19.3
+scipy==1.9.3
+semver==2.13.0
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+smmap==5.0.0
+stack-data @ file:///home/conda/feedstock_root/build_artifacts/stack_data_1668260892666/work
+statsmodels==0.13.5
+streamlit==1.14.1
+sympy==1.11.1
+-e git+https://github.com/CompVis/taming-transformers.git@3ba01b241669f5ade541ce990f7650a3b8f65318#egg=taming_transformers
+tensorboard==2.11.0
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.8.1
+test-tube==0.7.5
+tifffile==2022.10.10
+tokenizers==0.12.1
+toml==0.10.2
+tomli==2.0.1
+toolz==0.12.0
+torch==1.11.0
+torch-fidelity==0.3.0
+torchmetrics==0.6.0
+torchvision==0.12.0
+tornado @ file:///D:/bld/tornado_1656937958156/work
+tqdm==4.64.1
+traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1666115969632/work
+transformers==4.19.2
+typing_extensions @ file:///C:/Windows/TEMP/abs_dd2d0moa85/croots/recipe/typing_extensions_1659638831135/work
+tzdata==2022.6
+tzlocal==4.2
+-e git+ssh://git@github.itu.dk/jocl/unstable-diffusion.git@20366dd0deab6b54796c7c09846c8c4cbd75a165#egg=unstable
+urllib3 @ file:///C:/b/abs_a8_3vfznn_/croot/urllib3_1666298943664/work
+urwid==2.1.2
+validators==0.20.0
+watchdog==2.1.9
+wcwidth @ file:///home/conda/feedstock_root/build_artifacts/wcwidth_1600965781394/work
+webencodings==0.5.1
+Werkzeug==2.2.2
+win-inet-pton @ file:///C:/ci/win_inet_pton_1605306167264/work
+wincertstore==0.2
+yarl==1.8.1
+zipp==3.10.0
