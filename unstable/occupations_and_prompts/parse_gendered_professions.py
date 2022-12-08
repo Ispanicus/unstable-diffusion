@@ -20,6 +20,23 @@ SPECIFIC_OCCUPATIONS = {
     'electrician': 'Electricians',
 }
 
+PLOT_ORDER = [
+    'secretary',
+    'maid',
+    'nurse',
+    'social worker',
+    ' ',
+    'artist',
+    'professor',
+    'photographer',
+    'manager',
+    '  ',
+    'software developer',
+    'police officer',
+    'carpenter',
+    'electrician',
+]
+
 def query():
     cache = get_path('data/gender_prof.parquet')
 
