@@ -6,18 +6,18 @@ from pathlib import Path
 from unstable.meta_tools import get_path
 
 SPECIFIC_OCCUPATIONS = {
-    'police officer': 'Police officers',
-    'electrician': 'Electricians',
-    'carpenter': 'Carpenters',
-    'software developer': 'Software developers',
-    'social worker': 'Social workers, all other',
-    'maid': 'Maids and housekeeping cleaners',
     'secretary': 'Secretaries and administrative assistants, except legal, medical, and executive',
+    'maid': 'Maids and housekeeping cleaners',
     'nurse': 'Registered nurses',
+    'social worker': 'Social workers, all other',
+    'artist': 'Artists and related workers',
     'professor': 'Postsecondary teachers',
     'photographer': 'Photographers',
-    'artist': 'Artists and related workers',
     'manager': 'Management occupations',
+    'software developer': 'Software developers',
+    'police officer': 'Police officers',
+    'carpenter': 'Carpenters',
+    'electrician': 'Electricians',
 }
 
 def query():
