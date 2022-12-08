@@ -1,5 +1,6 @@
 from statsmodels.stats.inter_rater import fleiss_kappa, aggregate_raters
 import numpy as np
+import krippendorff as kd
 
 from unstable.annotations.load_anno_df import get_annotation_df
 
@@ -32,6 +33,9 @@ agg_df_not_api, _ = pivot_clean_agg(df_not_api)
 print(f'Full data: {fleiss_kappa(agg_df) = }')
 print(f'Api data: {fleiss_kappa(agg_df_api) = }')
 print(f'Non-Api data: {fleiss_kappa(agg_df_not_api) = }')
+
+# https://en.wikipedia.org/wiki/Krippendorff%27s_alpha
+print(f"Krippendorff's alpha: {kd.alpha(value_counts=agg_df, level_of_measurement='nominal')}")
 
 annotation_ratios_per_prof = (
     df.groupby(["profession", "api"])
