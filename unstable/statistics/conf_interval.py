@@ -1,4 +1,4 @@
-from unstable.occupations_and_prompts.parse_gendered_professions import get_female_work_percent
+from unstable.occupations_and_prompts.parse_gendered_professions import get_female_work_percent, align_work_index
 import pandas as pd
 import holoviews as hv
 from unstable.meta_tools import percent_tick
@@ -24,14 +24,6 @@ def conf_interval_plot(bootstraps):
         .hvplot.errorbars('profession_source', 'center', 'width', legend=True)
         .opts(ylabel='Female %')
     )
-
-def align_work_index(female_work_percentage):
-    df = female_work_percentage.to_frame()
-    df.index = df.index.str.replace(' ', '_')
-    return pd.concat([
-        df.set_index(df.index + ' SD'),
-        df.set_index(df.index + ' CR')
-    ])
 
 def hypothesis_conf_plot():
     '''
@@ -81,6 +73,19 @@ def hypothesis_conf_plot():
         )
     return plots
 
+# def kde():
+#     bootstraps = merge_multiindex(get_bootstrap_df())
+#     index = bootstraps.index.names
+#     kde_plot = (
+#         bootstraps
+#         .stack()
+#         .rename('female_mean')
+#         .reset_index(index)
+#         .hvplot.violin(by=index, y='female_mean')
+#         #.opts(xrotation=45)
+#     )
+#     kde_plot
+#     hv.Layout(kde_plot.values()).cols(1)
 
 if __name__ == '__main__':
     plots = hypothesis_conf_plot()
