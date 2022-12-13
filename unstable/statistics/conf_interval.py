@@ -1,4 +1,4 @@
-from unstable.occupations_and_prompts.parse_gendered_professions import get_female_work_percent, align_work_index
+from unstable.occupations_and_prompts.parse_gendered_professions import get_female_work_percent, align_work_index, PLOT_ORDER
 import pandas as pd
 import holoviews as hv
 from unstable.meta_tools import percent_tick
@@ -19,9 +19,8 @@ def conf_interval_plot(bootstraps):
     conf['width'] = conf.center - conf['0.025']
 
     return (
-        merge_multiindex(conf)
-        .reset_index()
-        .hvplot.errorbars('profession_source', 'center', 'width', legend=True)
+        conf.reset_index()
+        .hvplot.errorbars('profession', 'center', 'width')
         .opts(ylabel='Female %')
     )
 
@@ -34,32 +33,23 @@ def hypothesis_conf_plot():
         Labour stats points
         50% line
     '''
-    female_work_percent = get_female_work_percent()
+    order = [o.replace(' ', '_') if o.strip() else o for o in PLOT_ORDER]
 
-    boots = [
-        get_bootstrap_df(),
-        get_gender_bootstrapped()
-    ]
-    labours = [
-        female_work_percent.pipe(
-            align_work_index
-        ),
+    female_work_percent = get_female_work_percent().to_frame()
+    female_work_percent.index = female_work_percent.index.str.replace(' ', '_')
+    female_work_percent = female_work_percent.reindex(order)
 
-        female_work_percent.pipe(
-            profession_index_to_gender_index
-        ).squeeze().pipe(
-            align_work_index
-        )
-    ]
-#.squeeze().sort_values().hvplot.scatter(),
+    bootstrap = get_bootstrap_df()
+
     plots = []
-    for boot, labour in zip(boots, labours):
+    for is_api in [True, False]:
+        boot = bootstrap.xs(is_api, level='api').reindex(order[::-1])
         cols = ['us_female_percent', 'color']
-        a = pd.DataFrame([[.35, 'white']], index=[''], columns=cols)
-        b = pd.DataFrame([[.65, 'white']], index=[' '], columns=cols)
+        a = pd.DataFrame([[.35, 'white']], index=[' '], columns=cols)
+        b = pd.DataFrame([[.65, 'white']], index=['  '], columns=cols)
         scatter = (
             pd.concat(
-                [labour.assign(color='#1f77b4'), a, b]
+                [female_work_percent.assign(color='#1f77b4'), a, b]
             )
             .rename_axis('source')
             .reset_index()
@@ -89,23 +79,20 @@ def hypothesis_conf_plot():
 
 if __name__ == '__main__':
     plots = hypothesis_conf_plot()
-    plots[0].opts(
-        xlabel='profession & source',
-        title='Annotation confidence intervals \n& US labour data scatter',
-        invert_axes=True, width=400, height=400, legend_position='bottom')
-    # plots[1].opts(
-    #     xlabel='gender & source',
-    #     invert_axes=True,
-    #     width=400)
-    
+    h = 350
+    title='Annotation confidence intervals \n& US labour data scatter'
     legend = pd.Series([.50], index=['artist CR']).hvplot.scatter(
         marker='dash', color='black'
     ).relabel('95% interval')
-
-    conf_plot = (plots[0]*legend).opts(
-        xlabel='profession & source',
-        title='Annotation confidence intervals \n& US labour data scatter',
-        xformatter=percent_tick,
-        invert_axes=True, width=400, height=500, legend_position='bottom'
-    )
-    conf_plot
+    plots[1] *= legend
+    for p in plots:
+        p.opts(
+            xlabel='profession',
+            invert_axes=True, width=400, height=h, legend_position='bottom',
+            xformatter=percent_tick,
+        )
+    plots[0].opts(
+        show_legend=False, xaxis=None, height=h-80, 
+        title = title + '\nfor stable-diffusion (SD)')
+    plots[1].opts(title='for clip-retrieval (CR)')
+    hv.Layout(plots).cols(1)
