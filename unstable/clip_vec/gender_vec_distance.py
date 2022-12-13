@@ -1,6 +1,11 @@
 from unstable.clip_vec.modules import FrozenCLIPTextEmbedder
+import holoviews as hv
+from bokeh.models import PrintfTickFormatter
+import pandas as pd
 from unstable.meta_tools import get_path
 from unstable.occupations_and_prompts.prompter import PREFIX
+from unstable.occupations_and_prompts.parse_gendered_professions import PLOT_ORDER
+import hvplot.pandas
 import torch
 import numpy as np
 from typing import NamedTuple
@@ -35,18 +40,60 @@ class GenderAngle(NamedTuple):
     prompt: str
     man_radians: float
     woman_radians: float
-    ratio: float
+    diff: float
 
     @staticmethod
     def latex_header() -> str: 
-        return f'prompt & "man" angle {pi} & "woman" angle {pi} & angle ratio \\\\\n'
+        return f'prompt & "man" angle {pi} & "woman" angle {pi} & angle diff \\\\\n'
 
     def latex(s) -> str:
         prof = s.prompt.strip().split(" a ")[-1]
-        return f'{prof} & {s.man_radians:.2f} & {s.woman_radians:.2f} & {s.ratio:.2f} \\\\\n'
+        return f'{prof} & {s.man_radians:.2f} & {s.woman_radians:.2f} & {s.diff:.2f} \\\\\n'
 
     def __str__(s) -> str: 
-        return f'{s.prompt.strip():<35} {s.man_radians=:.2f} {s.woman_radians=:.2f} {s.ratio=:.2f}\n'
+        return f'{s.prompt.strip():<35} {s.man_radians=:.2f} {s.woman_radians=:.2f} {s.diff=:.2f}\n'
+
+def gender_dist_plot():
+    sd_clip = 'ViT-L/14'
+    cr_clip = 'ViT-B/32'
+
+    plots = []
+    for clip_version in [sd_clip, cr_clip]:
+        model = load_model(clip_version=clip_version)
+
+        man_vec = model.encode(PREFIX + 'man')
+        woman_vec = model.encode(PREFIX + 'woman')
+
+        prompts = get_prompts()
+        prompt_vecs = model.encode(prompts)
+        del model
+
+        dists = [
+            GenderDist(prompt, cosine_dist(vec, man_vec), cosine_dist(vec, woman_vec))
+            for prompt, vec in zip(prompts, prompt_vecs)
+        ]
+        angles = sorted([
+                GenderAngle(r.prompt, acos(r.man_dist), acos(r.woman_dist), acos(r.woman_dist)-acos(r.man_dist))
+                for r in dists
+            ], key=lambda r: r.diff
+        )
+        angles_df = pd.DataFrame(angles)
+        angles_df['profession'] = angles_df.prompt.str.replace(r'A picture of a (.*)\n', r'\1', regex=True)
+        diff = angles_df.set_index('profession')['diff'].reindex(PLOT_ORDER[::-1]).fillna(0)
+        diff *= 360
+
+        plots.append(
+            diff.hvplot.bar(alpha=0.5,color='diff', cmap='RdYlBu').opts(
+                invert_axes=True, 
+                colorbar=True, 
+                title="Gender proximity difference", 
+                xlabel = 'Profession',
+                ylabel = 'Δ Similarity [degrees]',
+                xformatter=PrintfTickFormatter(format='%f°')
+            )
+        )
+    return hv.Layout(plots)
+
 
 def print_prof_gender_dists(latex: bool = True, clip_version: str = 'ViT-L/14'):
     model = load_model(clip_version=clip_version)
@@ -62,9 +109,9 @@ def print_prof_gender_dists(latex: bool = True, clip_version: str = 'ViT-L/14'):
         for prompt, vec in zip(prompts, prompt_vecs)
     ]
     angles = sorted([
-            GenderAngle(r.prompt, acos(r.man_dist), acos(r.woman_dist), acos(r.man_dist)/acos(r.woman_dist))
+            GenderAngle(r.prompt, acos(r.man_dist), acos(r.woman_dist), acos(r.man_dist)-acos(r.woman_dist))
             for r in dists
-        ], key=lambda r: r.ratio
+        ], key=lambda r: r.diff
     )
         
     if latex:
