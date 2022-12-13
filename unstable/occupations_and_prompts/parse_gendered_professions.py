@@ -74,6 +74,14 @@ def get_female_work_percent():
     )
     return female_work_percent
 
+def align_work_index(female_work_percentage):
+    df = female_work_percentage.to_frame()
+    df.index = df.index.str.replace(' ', '_')
+    return pd.concat([
+        df.set_index(df.index + ' SD'),
+        df.set_index(df.index + ' CR')
+    ])
+
 
 
 if __name__ == '__main__':
