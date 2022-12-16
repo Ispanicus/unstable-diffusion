@@ -4,7 +4,7 @@ from unstable.annotations.load_anno_df import get_majority_annotation_df, get_an
 def get_credibility_bootstrapped_conf_interval():
     gold_label = get_majority_annotation_df(drop_ties=False).index
 
-    n_bootstraps = 100
+    n_bootstraps = 1000
     def bootstrap(row):
         return pd.Series(row.sample(frac=n_bootstraps, replace=True).values)
 
