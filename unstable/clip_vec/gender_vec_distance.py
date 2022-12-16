@@ -122,8 +122,4 @@ def print_prof_gender_dists(latex: bool = True, clip_version: str = 'ViT-L/14'):
 
 
 if __name__ == '__main__':
-    sd_clip = 'ViT-L/14'
-    cr_clip = 'ViT-B/32'
-    for model in [sd_clip, cr_clip]:
-        print(model)
-        print_prof_gender_dists(latex=True, clip_version=model)
+    plot = gender_dist_plot()
