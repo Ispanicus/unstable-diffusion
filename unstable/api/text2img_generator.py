@@ -15,8 +15,6 @@ for gender,profs in gender_profs.items():
 
 output = dict()
 for prof, prompt in prompts:
-	if prof == "police officer":
-		continue
 
 	print(f"generating images for: {prompt}")
 	output[prof] = dict()
@@ -34,7 +32,7 @@ for prof, prompt in prompts:
 			    data={
 			        'text': prompt,
 			    },
-			    headers={'api-key': '2fd1b690-405a-4f0b-8cb3-9edbbbb5719b'}
+			    headers={'api-key': 'your-key-here'}
 			)
 			if r.status_code == 200:
 				url = r.json()["output_url"]
