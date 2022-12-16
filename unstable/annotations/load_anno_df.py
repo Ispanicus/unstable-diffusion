@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import re
+import numpy as np
 from unstable.occupations_and_prompts.prompter import get_gender_occupations
 from unstable.meta_tools import get_path
 
@@ -73,8 +74,8 @@ def expand_filename(df):
     )
     return pd.concat([df, split], axis=1)
 
-def get_majority_annotation_df(drop_ties=True):
-    df = get_annotation_df()
+def get_majority_annotation_df(drop_ties=True, dropna=True):
+    df = get_annotation_df(dropna=dropna)
     counts = (
         df.pivot(columns='annotator',
                  index='filename',
@@ -132,6 +133,20 @@ def profession_index_to_gender_index(df):
     )
     return with_gender_index
 
+def extract_metadata_df():
+
+    df = get_annotation_df(dropna=False)
+    piv = df.pivot(index=['filename', 'api', 'profession'], columns='annotator', values='annotation')
+    piv.columns = [f'annotator_id_{i}' for i in range(piv.shape[1])]
+    piv = piv.reset_index().rename(columns={'api': 'source'})
+    piv['source'] = np.where(piv.source, 'SD', 'CR')
+    piv.columns.name = None
+
+    majority = get_majority_annotation_df(dropna=False, drop_ties=False)
+    majority = majority.reset_index('annotation').drop(columns='n_agree')
+
+    metadata = piv.merge(majority, how='outer', on='filename')
+    metadata.to_csv('metadata.csv', index=False)
 
 if __name__ == '__main__':
     df = get_annotation_df()
