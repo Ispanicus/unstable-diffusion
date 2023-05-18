@@ -1,5 +1,7 @@
 # unstable-diffusion
 
+Project looking into gender bias in Stable Diffusion and CLIP.
+
 To install environment, look at install.bat
 
 ## Data access
